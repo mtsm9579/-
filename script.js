@@ -1032,11 +1032,24 @@ class AdminDashboard {
         const container = document.getElementById('projectsList');
         try {
             Utils.showLoading(container);
-            // جلب المشاريع مباشرة من Gist
+            // جلب المشاريع من Gist API فقط (وليس من raw)
+            const settings = this.storage.getSettings();
+            // استخراج gistId من githubUrl
+            let gistId = '';
+            if (settings.githubUrl && settings.githubUrl.includes('gist.githubusercontent.com')) {
+                // مثال: https://gist.githubusercontent.com/username/gistid/raw/hash/projects.json
+                const match = settings.githubUrl.match(/gist\.githubusercontent\.com\/(?:[^/]+)\/([a-f0-9]+)\//);
+                if (match) gistId = match[1];
+            } else if (settings.githubUrl && /^[a-f0-9]+$/.test(settings.githubUrl)) {
+                gistId = settings.githubUrl;
+            }
+            const githubToken = settings.githubToken || sessionStorage.getItem('github_token') || '';
+            if (!gistId) throw new Error('gistId غير معرف في الإعدادات');
+            if (!githubToken) throw new Error('GitHub Token غير معرف');
             const apiUrl = `https://api.github.com/gists/${gistId}`;
             const response = await fetch(apiUrl, {
                 headers: {
-                    ...(githubToken ? { 'Authorization': `token ${githubToken}` } : {}),
+                    'Authorization': `token ${githubToken}`,
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
@@ -1047,6 +1060,7 @@ class AdminDashboard {
             let projects = [];
             if (data.files && data.files['projects.json']) {
                 let content = data.files['projects.json'].content;
+                // إذا كان المحتوى base64 (نادراً في Gist، غالباً نص عادي)
                 try {
                     if (/^[A-Za-z0-9+/=\r\n]+$/.test(content) && content.length > 100) {
                         content = atob(content.replace(/\n/g, ''));
@@ -1055,14 +1069,14 @@ class AdminDashboard {
                 projects = JSON.parse(content);
             }
             this.projects = projects;
-            console.log('AdminDashboard.loadProjects: loaded directly from Gist', this.projects);
+            console.log('AdminDashboard.loadProjects: loaded from Gist API', this.projects);
             this.renderProjectsList();
         } catch (error) {
-            console.error('Error loading projects from Gist:', error);
+            console.error('Error loading projects from Gist API:', error);
             const lang = Utils.getCurrentLanguage();
             const errorMessage = lang === 'ar' 
-                ? 'حدث خطأ في تحميل المشاريع من Gist' 
-                : 'Error loading projects from Gist';
+                ? 'حدث خطأ في تحميل المشاريع من Gist API' 
+                : 'Error loading projects from Gist API';
             Utils.showError(container, errorMessage);
         }
     }
