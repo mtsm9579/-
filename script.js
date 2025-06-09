@@ -1130,7 +1130,7 @@ class AdminDashboard {
     
     handleEditProject(projectId) {
         this.editingProject = this.projects.find(p => p.id === projectId);
-        if this.editingProject) {
+        if (this.editingProject) {
             this.showProjectForm();
             this.populateProjectForm(this.editingProject);
             
