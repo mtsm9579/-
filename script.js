@@ -210,49 +210,41 @@ class StorageManager {
     // Get projects from GitHub
     async getGithubProjects() {
         const { githubToken, githubUrl } = this.settings;
-        
         if (!githubToken || !githubUrl) {
             throw new Error('GitHub configuration incomplete');
         }
-        
         try {
             let apiUrl;
-            
-            // Check if it's a Gist ID or repo path
             if (githubUrl.includes('/')) {
-                // Repository path format: username/repo/path/to/file
                 apiUrl = `https://api.github.com/repos/${githubUrl}/contents`;
             } else {
-                // Gist ID format
                 apiUrl = `https://api.github.com/gists/${githubUrl}`;
             }
-            
             const response = await fetch(apiUrl, {
                 headers: {
                     'Authorization': `token ${githubToken}`,
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
-            
             if (!response.ok) {
                 throw new Error(`GitHub API error: ${response.status}`);
             }
-            
             const data = await response.json();
-            
-            // Handle different response formats
+            // LOG: Show what we got from GitHub
+            console.log('getGithubProjects: raw data from GitHub', data);
             if (data.files) {
-                // Gist response
                 const projectsFile = data.files['projects.json'];
                 if (projectsFile) {
-                    return JSON.parse(projectsFile.content);
+                    const parsed = JSON.parse(projectsFile.content);
+                    console.log('getGithubProjects: parsed projects', parsed);
+                    return parsed;
                 }
             } else if (data.content) {
-                // Repository file response
                 const content = atob(data.content);
-                return JSON.parse(content);
+                const parsed = JSON.parse(content);
+                console.log('getGithubProjects: parsed projects (repo)', parsed);
+                return parsed;
             }
-            
             return [];
         } catch (error) {
             console.error('Error loading GitHub projects:', error);
@@ -578,16 +570,17 @@ class ProjectShowcase {
     
     async loadProjects() {
         const container = document.getElementById('projectsContainer');
-        
         try {
             Utils.showLoading(container);
-            this.projects = await this.storage.getProjects();
+            // جلب المشاريع دائمًا من Gist
+            this.projects = await this.storage.getGithubProjects();
+            console.log('ProjectShowcase.loadProjects (Gist only): loaded projects', this.projects);
         } catch (error) {
-            console.error('Error loading projects:', error);
+            console.error('Error loading projects from Gist:', error);
             const lang = Utils.getCurrentLanguage();
             const errorMessage = lang === 'ar' 
-                ? 'حدث خطأ في تحميل المشاريع' 
-                : 'Error loading projects';
+                ? 'حدث خطأ في تحميل المشاريع من Gist' 
+                : 'Error loading projects from Gist';
             Utils.showError(container, errorMessage);
         }
     }
@@ -1004,17 +997,18 @@ class AdminDashboard {
     
     async loadProjects() {
         const container = document.getElementById('projectsList');
-        
         try {
             Utils.showLoading(container);
-            this.projects = await this.storage.getProjects();
+            // جلب المشاريع دائمًا من Gist
+            this.projects = await this.storage.getGithubProjects();
+            console.log('AdminDashboard.loadProjects (Gist only): loaded projects', this.projects);
             this.renderProjectsList();
         } catch (error) {
-            console.error('Error loading projects:', error);
+            console.error('Error loading projects from Gist:', error);
             const lang = Utils.getCurrentLanguage();
             const errorMessage = lang === 'ar' 
-                ? 'حدث خطأ في تحميل المشاريع' 
-                : 'Error loading projects';
+                ? 'حدث خطأ في تحميل المشاريع من Gist' 
+                : 'Error loading projects from Gist';
             Utils.showError(container, errorMessage);
         }
     }
@@ -1022,6 +1016,9 @@ class AdminDashboard {
     renderProjectsList() {
         const container = document.getElementById('projectsList');
         const lang = Utils.getCurrentLanguage();
+        // تعريف نصوص الأزرار حسب اللغة
+        const editText = lang === 'ar' ? 'تعديل' : 'Edit';
+        const deleteText = lang === 'ar' ? 'حذف' : 'Delete';
         
         if (this.projects.length === 0) {
             const noProjectsMessage = lang === 'ar' 
