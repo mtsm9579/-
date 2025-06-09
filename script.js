@@ -580,10 +580,34 @@ class ProjectShowcase {
     
     async loadProjects() {
         const container = document.getElementById('projectsContainer');
+        const gistId = '7d3285dbb5c1350803ecee8dc9897b5c'; // ثابت
+        const githubToken = sessionStorage.getItem('github_token') || '';
         try {
             Utils.showLoading(container);
-            this.projects = await this.storage.getGithubProjects();
-            console.log('ProjectShowcase.loadProjects: loaded from Gist', this.projects);
+            // جلب المشاريع مباشرة من Gist
+            const apiUrl = `https://api.github.com/gists/${gistId}`;
+            const response = await fetch(apiUrl, {
+                headers: {
+                    ...(githubToken ? { 'Authorization': `token ${githubToken}` } : {}),
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.status}`);
+            }
+            const data = await response.json();
+            let projects = [];
+            if (data.files && data.files['projects.json']) {
+                let content = data.files['projects.json'].content;
+                try {
+                    if (/^[A-Za-z0-9+/=\r\n]+$/.test(content) && content.length > 100) {
+                        content = atob(content.replace(/\n/g, ''));
+                    }
+                } catch (e) {}
+                projects = JSON.parse(content);
+            }
+            this.projects = projects;
+            console.log('ProjectShowcase.loadProjects: loaded directly from Gist', this.projects);
         } catch (error) {
             console.error('Error loading projects from Gist:', error);
             const lang = Utils.getCurrentLanguage();
@@ -1006,10 +1030,34 @@ class AdminDashboard {
     
     async loadProjects() {
         const container = document.getElementById('projectsList');
+        const gistId = '7d3285dbb5c1350803ecee8dc9897b5c'; // ثابت
+        const githubToken = sessionStorage.getItem('github_token') || '';
         try {
             Utils.showLoading(container);
-            this.projects = await this.storage.getGithubProjects();
-            console.log('AdminDashboard.loadProjects: loaded from Gist', this.projects);
+            // جلب المشاريع مباشرة من Gist
+            const apiUrl = `https://api.github.com/gists/${gistId}`;
+            const response = await fetch(apiUrl, {
+                headers: {
+                    ...(githubToken ? { 'Authorization': `token ${githubToken}` } : {}),
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.status}`);
+            }
+            const data = await response.json();
+            let projects = [];
+            if (data.files && data.files['projects.json']) {
+                let content = data.files['projects.json'].content;
+                try {
+                    if (/^[A-Za-z0-9+/=\r\n]+$/.test(content) && content.length > 100) {
+                        content = atob(content.replace(/\n/g, ''));
+                    }
+                } catch (e) {}
+                projects = JSON.parse(content);
+            }
+            this.projects = projects;
+            console.log('AdminDashboard.loadProjects: loaded directly from Gist', this.projects);
             this.renderProjectsList();
         } catch (error) {
             console.error('Error loading projects from Gist:', error);
@@ -1082,7 +1130,7 @@ class AdminDashboard {
     
     handleEditProject(projectId) {
         this.editingProject = this.projects.find(p => p.id === projectId);
-        if (this.editingProject) {
+        if this.editingProject) {
             this.showProjectForm();
             this.populateProjectForm(this.editingProject);
             

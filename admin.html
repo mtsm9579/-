@@ -265,6 +265,18 @@
 
     <script src="script.js"></script>
     <script>
+        // حفظ التوكن في sessionStorage عند الضغط على زر حفظ الإعدادات
+        document.addEventListener('DOMContentLoaded', function() {
+            const saveSettingsBtn = document.getElementById('saveSettings');
+            if (saveSettingsBtn) {
+                saveSettingsBtn.addEventListener('click', function() {
+                    const tokenInput = document.getElementById('githubToken');
+                    if (tokenInput && tokenInput.value) {
+                        sessionStorage.setItem('github_token', tokenInput.value);
+                    }
+                });
+            }
+        });
         // Initialize the admin dashboard
         document.addEventListener('DOMContentLoaded', () => {
             const admin = new AdminDashboard();
