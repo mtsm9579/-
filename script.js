@@ -10,7 +10,7 @@ const CONFIG = {
     DEFAULT_SETTINGS: {
         storageMethod: 'github',
         githubToken: sessionStorage.getItem('github_token') || '',
-        githubUrl: '7d3285dbb5c1350803ecee8dc9897b5c',
+        githubUrl: 'https://gist.githubusercontent.com/mtsm9579/7d3285dbb5c1350803ecee8dc9897b5c/raw/cf1bd0a39736d55003d20d1cebecfc88defd3ea0/projects.json',
         defaultView: 'grid',
         displayMode: 'both',
         cardStyle: 'github',
@@ -578,32 +578,45 @@ class ProjectShowcase {
         }
     }
     
-    async loadProjects() {
-        const container = document.getElementById('projectsContainer');
-        try {
-            Utils.showLoading(container);
-            // جلب المشاريع مباشرة من ملف raw JSON في gist (عرض فقط)
-            const apiUrl = 'https://gist.githubusercontent.com/mtsm9579/7d3285dbb5c1350803ecee8dc9897b5c/raw/641408b7ca33061f1518570e9525d04ca82ea6d0/projects.json';
-            const response = await fetch(apiUrl, {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`GitHub Gist raw error: ${response.status}`);
-            }
-            const projects = await response.json();
-            this.projects = projects;
-            console.log('ProjectShowcase.loadProjects: loaded from gist raw JSON', this.projects);
-        } catch (error) {
-            console.error('Error loading projects from gist raw JSON:', error);
-            const lang = Utils.getCurrentLanguage();
-            const errorMessage = lang === 'ar' 
-                ? 'حدث خطأ في تحميل المشاريع من Gist (raw)'
-                : 'Error loading projects from Gist (raw)';
-            Utils.showError(container, errorMessage);
+async loadProjects() {
+    const container = document.getElementById('projectsContainer');
+    try {
+        Utils.showLoading(container);
+
+        // استخدم githubUrl من الإعدادات
+        const rawUrl = this.storage.settings.githubUrl;
+
+        // تحقق من وجود رابط صالح
+        if (!rawUrl || !rawUrl.includes('gist.githubusercontent.com')) {
+            throw new Error('رابط GitHub Gist raw غير صالح');
         }
+
+        // طلب البيانات من الرابط
+        const response = await fetch(rawUrl, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`GitHub Gist raw error: ${response.status}`);
+        }
+
+        const projects = await response.json();
+        this.projects = projects;
+
+        console.log('ProjectShowcase.loadProjects: loaded from raw URL', this.projects);
+    } catch (error) {
+        console.error('Error loading projects from raw URL:', error);
+        const lang = Utils.getCurrentLanguage();
+        const errorMessage = lang === 'ar'
+            ? 'حدث خطأ في تحميل المشاريع من Gist (raw)'
+            : 'Error loading projects from Gist (raw)';
+        Utils.showError(container, errorMessage);
     }
+}
+
+
     
     renderProjects() {
         const container = document.getElementById('projectsContainer');
