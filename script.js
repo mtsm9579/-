@@ -235,7 +235,17 @@ class StorageManager {
             if (data.files) {
                 const projectsFile = data.files['projects.json'];
                 if (projectsFile) {
-                    const parsed = JSON.parse(projectsFile.content);
+                    let content = projectsFile.content;
+                    // بعض الـ Gist API ترجع content base64 وبعضها نص عادي
+                    try {
+                        // جرب فك التشفير base64 إذا كان نص مشفر
+                        if (/^[A-Za-z0-9+/=\r\n]+$/.test(content) && content.length > 100) {
+                            content = atob(content.replace(/\n/g, ''));
+                        }
+                    } catch (e) {
+                        // إذا فشل فك التشفير، اعتبره نص عادي
+                    }
+                    const parsed = JSON.parse(content);
                     console.log('getGithubProjects: parsed projects', parsed);
                     return parsed;
                 }
