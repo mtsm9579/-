@@ -582,25 +582,14 @@ class ProjectShowcase {
         const container = document.getElementById('projectsContainer');
         try {
             Utils.showLoading(container);
-            // جرب أولاً من Gist
-            try {
-                this.projects = await this.storage.getGithubProjects();
-                if (!this.projects || this.projects.length === 0) throw new Error('No projects in Gist');
-                console.log('ProjectShowcase.loadProjects: loaded from Gist', this.projects);
-            } catch (gistError) {
-                // إذا فشل أو لم يجد مشاريع، جرب من projects.json المحلي
-                console.warn('ProjectShowcase.loadProjects: Gist failed, trying local projects.json', gistError);
-                const response = await fetch('projects.json');
-                if (!response.ok) throw new Error('projects.json not found');
-                this.projects = await response.json();
-                console.log('ProjectShowcase.loadProjects: loaded from local projects.json', this.projects);
-            }
+            this.projects = await this.storage.getGithubProjects();
+            console.log('ProjectShowcase.loadProjects: loaded from Gist', this.projects);
         } catch (error) {
-            console.error('Error loading projects:', error);
+            console.error('Error loading projects from Gist:', error);
             const lang = Utils.getCurrentLanguage();
             const errorMessage = lang === 'ar' 
-                ? 'حدث خطأ في تحميل المشاريع' 
-                : 'Error loading projects';
+                ? 'حدث خطأ في تحميل المشاريع من Gist' 
+                : 'Error loading projects from Gist';
             Utils.showError(container, errorMessage);
         }
     }
@@ -1019,26 +1008,15 @@ class AdminDashboard {
         const container = document.getElementById('projectsList');
         try {
             Utils.showLoading(container);
-            // جرب أولاً من Gist
-            try {
-                this.projects = await this.storage.getGithubProjects();
-                if (!this.projects || this.projects.length === 0) throw new Error('No projects in Gist');
-                console.log('AdminDashboard.loadProjects: loaded from Gist', this.projects);
-            } catch (gistError) {
-                // إذا فشل أو لم يجد مشاريع، جرب من projects.json المحلي
-                console.warn('AdminDashboard.loadProjects: Gist failed, trying local projects.json', gistError);
-                const response = await fetch('projects.json');
-                if (!response.ok) throw new Error('projects.json not found');
-                this.projects = await response.json();
-                console.log('AdminDashboard.loadProjects: loaded from local projects.json', this.projects);
-            }
+            this.projects = await this.storage.getGithubProjects();
+            console.log('AdminDashboard.loadProjects: loaded from Gist', this.projects);
             this.renderProjectsList();
         } catch (error) {
-            console.error('Error loading projects:', error);
+            console.error('Error loading projects from Gist:', error);
             const lang = Utils.getCurrentLanguage();
             const errorMessage = lang === 'ar' 
-                ? 'حدث خطأ في تحميل المشاريع' 
-                : 'Error loading projects';
+                ? 'حدث خطأ في تحميل المشاريع من Gist' 
+                : 'Error loading projects from Gist';
             Utils.showError(container, errorMessage);
         }
     }
