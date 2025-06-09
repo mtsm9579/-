@@ -580,40 +580,27 @@ class ProjectShowcase {
     
     async loadProjects() {
         const container = document.getElementById('projectsContainer');
-        const gistId = '7d3285dbb5c1350803ecee8dc9897b5c'; // ثابت
-        const githubToken = sessionStorage.getItem('github_token') || '';
         try {
             Utils.showLoading(container);
-            // جلب المشاريع مباشرة من Gist
-            const apiUrl = `https://api.github.com/gists/${gistId}`;
+            // جلب المشاريع مباشرة من ملف raw JSON في gist (عرض فقط)
+            const apiUrl = 'https://gist.githubusercontent.com/mtsm9579/7d3285dbb5c1350803ecee8dc9897b5c/raw/641408b7ca33061f1518570e9525d04ca82ea6d0/projects.json';
             const response = await fetch(apiUrl, {
                 headers: {
-                    ...(githubToken ? { 'Authorization': `token ${githubToken}` } : {}),
-                    'Accept': 'application/vnd.github.v3+json'
+                    'Accept': 'application/json'
                 }
             });
             if (!response.ok) {
-                throw new Error(`GitHub API error: ${response.status}`);
+                throw new Error(`GitHub Gist raw error: ${response.status}`);
             }
-            const data = await response.json();
-            let projects = [];
-            if (data.files && data.files['projects.json']) {
-                let content = data.files['projects.json'].content;
-                try {
-                    if (/^[A-Za-z0-9+/=\r\n]+$/.test(content) && content.length > 100) {
-                        content = atob(content.replace(/\n/g, ''));
-                    }
-                } catch (e) {}
-                projects = JSON.parse(content);
-            }
+            const projects = await response.json();
             this.projects = projects;
-            console.log('ProjectShowcase.loadProjects: loaded directly from Gist', this.projects);
+            console.log('ProjectShowcase.loadProjects: loaded from gist raw JSON', this.projects);
         } catch (error) {
-            console.error('Error loading projects from Gist:', error);
+            console.error('Error loading projects from gist raw JSON:', error);
             const lang = Utils.getCurrentLanguage();
             const errorMessage = lang === 'ar' 
-                ? 'حدث خطأ في تحميل المشاريع من Gist' 
-                : 'Error loading projects from Gist';
+                ? 'حدث خطأ في تحميل المشاريع من Gist (raw)'
+                : 'Error loading projects from Gist (raw)';
             Utils.showError(container, errorMessage);
         }
     }
@@ -1030,8 +1017,6 @@ class AdminDashboard {
     
     async loadProjects() {
         const container = document.getElementById('projectsList');
-        const gistId = '7d3285dbb5c1350803ecee8dc9897b5c'; // ثابت
-        const githubToken = sessionStorage.getItem('github_token') || '';
         try {
             Utils.showLoading(container);
             // جلب المشاريع مباشرة من Gist
