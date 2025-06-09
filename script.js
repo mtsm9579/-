@@ -859,20 +859,38 @@ class AdminDashboard {
             displayMode: document.getElementById('displayMode').value,
             cardStyle: document.getElementById('cardStyle').value
         };
-        
+
+        // تحقق من الحقول المطلوبة إذا كان التخزين GitHub
+        if (settings.storageMethod === 'github') {
+            if (!settings.githubToken || !settings.githubUrl) {
+                this.showNotification(
+                    Utils.getCurrentLanguage() === 'ar'
+                        ? 'يرجى إدخال التوكن ورابط GitHub بشكل صحيح'
+                        : 'Please enter a valid GitHub token and URL',
+                    'error'
+                );
+                return;
+            }
+        }
+
         try {
             this.storage.saveSettings(settings);
+            // تحقق من الحفظ فعلياً
+            const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.SETTINGS);
+            if (!saved) {
+                throw new Error('لم يتم حفظ الإعدادات في المتصفح');
+            }
             this.showNotification(
-                Utils.getCurrentLanguage() === 'ar' 
-                    ? 'تم حفظ الإعدادات بنجاح' 
+                Utils.getCurrentLanguage() === 'ar'
+                    ? 'تم حفظ الإعدادات بنجاح'
                     : 'Settings saved successfully',
                 'success'
             );
         } catch (error) {
             this.showNotification(
-                Utils.getCurrentLanguage() === 'ar' 
-                    ? 'خطأ في حفظ الإعدادات' 
-                    : 'Error saving settings',
+                Utils.getCurrentLanguage() === 'ar'
+                    ? 'خطأ في حفظ الإعدادات: ' + error.message
+                    : 'Error saving settings: ' + error.message,
                 'error'
             );
         }
@@ -985,35 +1003,31 @@ class AdminDashboard {
                     </p>
                 </div>
             `;
-            return;
-        }
-        
-        const projectsHTML = this.projects.map(project => {
-            const title = project.title[lang] || project.title.ar || project.title.en;
-            const editText = lang === 'ar' ? 'تحرير' : 'Edit';
-            const deleteText = lang === 'ar' ? 'حذف' : 'Delete';
-            
-            return `
-                <div class="project-item">
-                    <div class="project-item-content">
-                        <h4 class="project-item-title">${title}</h4>
-                        <div class="project-item-meta">
-                            <span>${Utils.formatDate(project.createdAt || Date.now())}</span>
+        } else {
+            const projectsHTML = this.projects.map(project => {
+                const title = project.title[lang] || project.title.ar || project.title.en;
+                const description = project.description[lang] || project.description.ar || project.description.en;
+                
+                return `
+                    <div class="project-item">
+                        <div class="project-item-content">
+                            <h3 class="project-item-title">${title}</h3>
+                            <p class="project-item-description">${description}</p>
+                        </div>
+                        <div class="project-item-actions">
+                            <button class="btn btn-outline btn-sm" onclick="adminDashboard.handleEditProject('${project.id}')">
+                                ${editText}
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="adminDashboard.handleDeleteProject('${project.id}')">
+                                ${deleteText}
+                            </button>
                         </div>
                     </div>
-                    <div class="project-item-actions">
-                        <button class="btn btn-outline btn-sm" onclick="adminDashboard.handleEditProject('${project.id}')">
-                            ${editText}
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="adminDashboard.handleDeleteProject('${project.id}')">
-                            ${deleteText}
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        container.innerHTML = projectsHTML;
+                `;
+            }).join('');
+            
+            container.innerHTML = projectsHTML;
+        }
     }
     
     handleAddProject() {
