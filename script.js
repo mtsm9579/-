@@ -187,6 +187,26 @@ class StorageManager {
         }
     }
     
+    // حفظ واسترجاع المشاريع من sessionStorage لعرضها في الصفحة بدون GitHub
+    getSessionProjects() {
+        try {
+            const stored = sessionStorage.getItem('sessionProjects');
+            return stored ? JSON.parse(stored) : [];
+        } catch (error) {
+            console.error('Error loading session projects:', error);
+            return [];
+        }
+    }
+    saveSessionProjects(projects) {
+        try {
+            sessionStorage.setItem('sessionProjects', JSON.stringify(projects));
+            return true;
+        } catch (error) {
+            console.error('Error saving session projects:', error);
+            return false;
+        }
+    }
+    
     // Get projects from GitHub
     async getGithubProjects() {
         const { githubToken, githubUrl } = this.settings;
@@ -319,6 +339,8 @@ class StorageManager {
     async getProjects() {
         if (this.settings.storageMethod === 'github') {
             return await this.getGithubProjects();
+        } else if (this.settings.storageMethod === 'session') {
+            return this.getSessionProjects();
         } else {
             return this.getLocalProjects();
         }
@@ -328,6 +350,8 @@ class StorageManager {
     async saveProjects(projects) {
         if (this.settings.storageMethod === 'github') {
             await this.saveGithubProjects(projects);
+        } else if (this.settings.storageMethod === 'session') {
+            this.saveSessionProjects(projects);
         } else {
             this.saveLocalProjects(projects);
         }
@@ -1137,12 +1161,20 @@ class AdminDashboard {
             );
         } catch (error) {
             console.error('Error saving project:', error);
-            const lang = Utils.getCurrentLanguage();
-            // عرض تفاصيل الخطأ للمستخدم
+            // عرض رسالة الخطأ من GitHub للمستخدم بشكل واضح
+            const errorMsg = (error && error.message ? error.message : error);
             this.showNotification(
-                (lang === 'ar' ? 'خطأ في حفظ المشروع: ' : 'Error saving project: ') + (error && error.message ? error.message : error),
+                (Utils.getCurrentLanguage() === 'ar'
+                    ? 'خطأ في حفظ المشروع: '
+                    : 'Error saving project: ') + errorMsg,
                 'error'
             );
+            // إذا كان هناك تفاصيل أكثر في response
+            if (error && error.response) {
+                error.response.text().then(txt => {
+                    this.showNotification(txt, 'error');
+                });
+            }
         }
     }
     
