@@ -8,9 +8,9 @@ const CONFIG = {
         AUTH: 'portfolioAuth'
     },
     DEFAULT_SETTINGS: {
-        storageMethod: 'local',
-        githubToken: '',
-        githubUrl: '',
+        storageMethod: 'github',
+        githubToken: sessionStorage.getItem('github_token') || '',
+        githubUrl: '7d3285dbb5c1350803ecee8dc9897b5c',
         defaultView: 'grid',
         displayMode: 'both',
         cardStyle: 'github',
@@ -120,7 +120,7 @@ class StorageManager {
     // Get settings
     getSettings() {
         try {
-            const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.SETTINGS);
+            const stored = sessionStorage.getItem(CONFIG.STORAGE_KEYS.SETTINGS);
             return stored ? { ...CONFIG.DEFAULT_SETTINGS, ...JSON.parse(stored) } : CONFIG.DEFAULT_SETTINGS;
         } catch (error) {
             console.error('Error loading settings:', error);
@@ -132,7 +132,9 @@ class StorageManager {
     saveSettings(settings) {
         try {
             this.settings = { ...this.settings, ...settings };
-            localStorage.setItem(CONFIG.STORAGE_KEYS.SETTINGS, JSON.stringify(this.settings));
+            sessionStorage.setItem(CONFIG.STORAGE_KEYS.SETTINGS, JSON.stringify(this.settings));
+            // عند حفظ الإعدادات، خزّن التوكن في sessionStorage فقط
+            sessionStorage.setItem('github_token', document.getElementById('githubToken').value);
             return true;
         } catch (error) {
             console.error('Error saving settings:', error);
@@ -960,7 +962,7 @@ class AdminDashboard {
         
         // Update form fields
         document.getElementById('storageMethod').value = settings.storageMethod;
-        document.getElementById('githubToken').value = settings.githubToken || '';
+        document.getElementById('githubToken').value = sessionStorage.getItem('github_token') || '';
         document.getElementById('githubUrl').value = settings.githubUrl || '';
         document.getElementById('defaultView').value = settings.defaultView;
         document.getElementById('displayMode').value = settings.displayMode;
@@ -968,6 +970,12 @@ class AdminDashboard {
         
         // Show/hide GitHub settings
         this.handleStorageMethodChange();
+        
+        // عند تحميل الإعدادات، إذا كان هناك توكن في sessionStorage استخدمه بدلاً من المحفوظ
+        const sessionToken = sessionStorage.getItem('github_token');
+        if (sessionToken) {
+            document.getElementById('githubToken').value = sessionToken;
+        }
     }
     
     async loadProjects() {
@@ -1130,8 +1138,9 @@ class AdminDashboard {
         } catch (error) {
             console.error('Error saving project:', error);
             const lang = Utils.getCurrentLanguage();
+            // عرض تفاصيل الخطأ للمستخدم
             this.showNotification(
-                lang === 'ar' ? 'خطأ في حفظ المشروع' : 'Error saving project',
+                (lang === 'ar' ? 'خطأ في حفظ المشروع: ' : 'Error saving project: ') + (error && error.message ? error.message : error),
                 'error'
             );
         }
