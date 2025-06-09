@@ -277,10 +277,13 @@
                 });
             }
         });
-        // Initialize the admin dashboard
+        // إصلاح مشكلة التهيئة المزدوجة
+        window.adminDashboard = null;
         document.addEventListener('DOMContentLoaded', () => {
-            const admin = new AdminDashboard();
-            admin.init();
+            if (!window.adminDashboard) {
+                window.adminDashboard = new AdminDashboard();
+                window.adminDashboard.init();
+            }
         });
     </script>
 </body>
