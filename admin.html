@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <svg class="login-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <circle cx="12" cy="16" r="1"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <h1 class="login-title" data-ar="لوحة التحكم" data-en="Admin Dashboard">لوحة التحكم</h1>
+                <p class="login-subtitle" data-ar="يرجى إدخال كلمة المرور للمتابعة" data-en="Please enter password to continue">يرجى إدخال كلمة المرور للمتابعة</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="password" data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</button>
+                <div class="login-error" id="loginError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-dashboard" id="adminDashboard" style="display: none;">
+        <header class="header admin-header">
+            <nav class="nav">
+                <div class="nav-brand">
+                    <h1 class="brand-title" data-ar="لوحة التحكم" data-en="Admin Dashboard">لوحة التحكم</h1>
+                </div>
+                <div class="nav-controls">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                        <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                    <button class="lang-toggle" id="langToggle">
+                        <span class="lang-text">EN</span>
+                    </button>
+                    <a href="index.html" class="btn btn-outline" data-ar="عرض الموقع" data-en="View Site">عرض الموقع</a>
+                    <button class="btn btn-danger" id="logoutBtn" data-ar="تسجيل الخروج" data-en="Logout">تسجيل الخروج</button>
+                </div>
+            </nav>
+        </header>
+
+        <main class="admin-main">
+            <div class="admin-container">
+                <!-- Profile Settings -->
+                <section class="admin-section">
+                    <div class="section-header">
+                        <h2 class="section-title" data-ar="إعدادات البروفايل الشخصي" data-en="Personal Profile Settings">إعدادات البروفايل الشخصي</h2>
+                    </div>
+                    <div class="profile-settings-grid">
+                        <div class="form-group">
+                            <label data-ar="اسم البروفايل (عربي)" data-en="Profile Name (Arabic)">اسم البروفايل (عربي)</label>
+                            <input type="text" id="profileNameAr" class="form-input" placeholder="أحمد محمد">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="اسم البروفايل (إنجليزي)" data-en="Profile Name (English)">اسم البروفايل (إنجليزي)</label>
+                            <input type="text" id="profileNameEn" class="form-input" placeholder="Ahmed Mohammed">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="المسمى الوظيفي (عربي)" data-en="Job Title (Arabic)">المسمى الوظيفي (عربي)</label>
+                            <input type="text" id="profileTitleAr" class="form-input" placeholder="مطور ويب">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="المسمى الوظيفي (إنجليزي)" data-en="Job Title (English)">المسمى الوظيفي (إنجليزي)</label>
+                            <input type="text" id="profileTitleEn" class="form-input" placeholder="Web Developer">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="النبذة الشخصية (عربي)" data-en="Bio (Arabic)">النبذة الشخصية (عربي)</label>
+                            <textarea id="profileBioAr" class="form-input" rows="3" placeholder="مرحباً بك في بروفايلي الشخصي"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="النبذة الشخصية (إنجليزي)" data-en="Bio (English)">النبذة الشخصية (إنجليزي)</label>
+                            <textarea id="profileBioEn" class="form-input" rows="3" placeholder="Welcome to my personal portfolio"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="رابط الصورة الشخصية" data-en="Profile Image URL">رابط الصورة الشخصية</label>
+                            <input type="url" id="profileImageUrl" class="form-input" placeholder="https://example.com/profile.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="عنوان معرض المشاريع (عربي)" data-en="Projects Section Title (Arabic)">عنوان معرض المشاريع (عربي)</label>
+                            <input type="text" id="heroTitleAr" class="form-input" placeholder="معرض المشاريع">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="عنوان معرض المشاريع (إنجليزي)" data-en="Projects Section Title (English)">عنوان معرض المشاريع (إنجليزي)</label>
+                            <input type="text" id="heroTitleEn" class="form-input" placeholder="Projects Gallery">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="وصف معرض المشاريع (عربي)" data-en="Projects Description (Arabic)">وصف معرض المشاريع (عربي)</label>
+                            <textarea id="heroDescriptionAr" class="form-input" rows="2" placeholder="مجموعة مختارة من أعمالي"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="وصف معرض المشاريع (إنجليزي)" data-en="Projects Description (English)">وصف معرض المشاريع (إنجليزي)</label>
+                            <textarea id="heroDescriptionEn" class="form-input" rows="2" placeholder="A curated collection of my work"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="نص الفوتر (عربي)" data-en="Footer Text (Arabic)">نص الفوتر (عربي)</label>
+                            <input type="text" id="footerTextAr" class="form-input" placeholder="© 2024 جميع الحقوق محفوظة">
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="نص الفوتر (إنجليزي)" data-en="Footer Text (English)">نص الفوتر (إنجليزي)</label>
+                            <input type="text" id="footerTextEn" class="form-input" placeholder="© 2024 All rights reserved">
+                        </div>
+                    </div>
+                    
+                    <!-- Social Links -->
+                    <div class="social-settings">
+                        <h3 data-ar="روابط التواصل الاجتماعي" data-en="Social Media Links">روابط التواصل الاجتماعي</h3>
+                        <div class="social-settings-grid">
+                            <div class="form-group">
+                                <label data-ar="رابط GitHub" data-en="GitHub URL">رابط GitHub</label>
+                                <input type="url" id="githubSocialUrl" class="form-input" placeholder="https://github.com/username">
+                            </div>
+                            <div class="form-group">
+                                <label data-ar="رابط Twitter" data-en="Twitter URL">رابط Twitter</label>
+                                <input type="url" id="twitterUrl" class="form-input" placeholder="https://twitter.com/username">
+                            </div>
+                            <div class="form-group">
+                                <label data-ar="رابط LinkedIn" data-en="LinkedIn URL">رابط LinkedIn</label>
+                                <input type="url" id="linkedinUrl" class="form-input" placeholder="https://linkedin.com/in/username">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="saveProfileSettings" data-ar="حفظ إعدادات البروفايل" data-en="Save Profile Settings">حفظ إعدادات البروفايل</button>
+                </section>
+
+                <!-- General Settings -->
+                <section class="admin-section">
+                    <div class="section-header">
+                        <h2 class="section-title" data-ar="الإعدادات العامة" data-en="General Settings">الإعدادات العامة</h2>
+                    </div>
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <label class="setting-label" data-ar="طريقة حفظ البيانات" data-en="Data Storage Method">طريقة حفظ البيانات</label>
+                            <select id="storageMethod" class="form-select">
+                                <option value="local" data-ar="محلي (localStorage)" data-en="Local Storage">محلي (localStorage)</option>
+                                <option value="github" data-ar="GitHub API" data-en="GitHub API">GitHub API</option>
+                            </select>
+                        </div>
+                        <div class="setting-group" id="githubSettings" style="display: none;">
+                            <label class="setting-label" data-ar="GitHub Token" data-en="GitHub Token">GitHub Token</label>
+                            <input type="password" id="githubToken" class="form-input" placeholder="ghp_xxxxxxxxxxxx">
+                            <label class="setting-label" data-ar="Gist ID أو Repository URL" data-en="Gist ID or Repository URL">Gist ID أو Repository URL</label>
+                            <input type="text" id="githubUrl" class="form-input" placeholder="gist-id or username/repo/path">
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label" data-ar="نوع العرض الافتراضي" data-en="Default View Type">نوع العرض الافتراضي</label>
+                            <select id="defaultView" class="form-select">
+                                <option value="grid" data-ar="شبكي" data-en="Grid">شبكي</option>
+                                <option value="list" data-ar="قائمة" data-en="List">قائمة</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label" data-ar="طريقة عرض المحتوى" data-en="Content Display Mode">طريقة عرض المحتوى</label>
+                            <select id="displayMode" class="form-select">
+                                <option value="both" data-ar="نص + صورة" data-en="Text + Image">نص + صورة</option>
+                                <option value="text" data-ar="نص فقط" data-en="Text Only">نص فقط</option>
+                                <option value="image" data-ar="صورة فقط" data-en="Image Only">صورة فقط</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label" data-ar="شكل كروت المشاريع" data-en="Project Card Style">شكل كروت المشاريع</label>
+                            <select id="cardStyle" class="form-select">
+                                <option value="github" data-ar="GitHub Style" data-en="GitHub Style">GitHub Style</option>
+                                <option value="modern" data-ar="عصري" data-en="Modern">عصري</option>
+                                <option value="minimal" data-ar="بسيط" data-en="Minimal">بسيط</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="saveSettings" data-ar="حفظ الإعدادات" data-en="Save Settings">حفظ الإعدادات</button>
+                </section>
+
+                <!-- Project Management -->
+                <section class="admin-section">
+                    <div class="section-header">
+                        <h2 class="section-title" data-ar="إدارة المشاريع" data-en="Project Management">إدارة المشاريع</h2>
+                        <button class="btn btn-primary" id="addProjectBtn" data-ar="إضافة مشروع جديد" data-en="Add New Project">إضافة مشروع جديد</button>
+                    </div>
+
+                    <!-- Project Form -->
+                    <div class="project-form" id="projectForm" style="display: none;">
+                        <div class="form-header">
+                            <h3 class="form-title" data-ar="إضافة مشروع جديد" data-en="Add New Project">إضافة مشروع جديد</h3>
+                            <button class="btn-close" id="closeForm">&times;</button>
+                        </div>
+                        <form id="projectFormElement">
+                            <input type="hidden" id="projectId">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="titleAr" data-ar="العنوان بالعربية" data-en="Title (Arabic)">العنوان بالعربية</label>
+                                    <input type="text" id="titleAr" name="titleAr" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="titleEn" data-ar="العنوان بالإنجليزية" data-en="Title (English)">العنوان بالإنجليزية</label>
+                                    <input type="text" id="titleEn" name="titleEn" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="descriptionAr" data-ar="الوصف بالعربية" data-en="Description (Arabic)">الوصف بالعربية</label>
+                                    <textarea id="descriptionAr" name="descriptionAr" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descriptionEn" data-ar="الوصف بالإنجليزية" data-en="Description (English)">الوصف بالإنجليزية</label>
+                                    <textarea id="descriptionEn" name="descriptionEn" rows="3" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="githubUrl" data-ar="رابط GitHub" data-en="GitHub URL">رابط GitHub</label>
+                                    <input type="url" id="githubUrl" name="githubUrl" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="liveUrl" data-ar="رابط العرض المباشر" data-en="Live Demo URL">رابط العرض المباشر</label>
+                                    <input type="url" id="liveUrl" name="liveUrl">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="imageUrl" data-ar="رابط صورة المشروع" data-en="Project Image URL">رابط صورة المشروع</label>
+                                    <input type="url" id="imageUrl" name="imageUrl">
+                                </div>
+                                <div class="form-group">
+                                    <label for="technologies" data-ar="التقنيات المستخدمة" data-en="Technologies Used">التقنيات المستخدمة</label>
+                                    <input type="text" id="technologies" name="technologies" placeholder="HTML, CSS, JavaScript">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" id="cancelBtn" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+                                <button type="submit" class="btn btn-primary" data-ar="حفظ المشروع" data-en="Save Project">حفظ المشروع</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Projects List -->
+                    <div class="projects-list" id="projectsList">
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                            <p data-ar="جاري تحميل المشاريع..." data-en="Loading projects...">جاري تحميل المشاريع...</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize the admin dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            const admin = new AdminDashboard();
+            admin.init();
+        });
+    </script>
+</body>
+</html>

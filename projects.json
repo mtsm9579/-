@@ -1,0 +1,70 @@
+[
+  {
+    "id": "project-1",
+    "title": {
+      "ar": "موقع شركة تقنية",
+      "en": "Tech Company Website"
+    },
+    "description": {
+      "ar": "موقع ويب متجاوب لشركة تقنية مع تصميم عصري وأداء ممتاز",
+      "en": "Responsive corporate website for a tech company with modern design and excellent performance"
+    },
+    "githubUrl": "https://github.com/example/tech-website",
+    "liveUrl": "https://tech-company-demo.netlify.app",
+    "imageUrl": "https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "technologies": "HTML, CSS, JavaScript, React",
+    "createdAt": 1704067200000,
+    "updatedAt": 1704067200000
+  },
+  {
+    "id": "project-2",
+    "title": {
+      "ar": "تطبيق إدارة المهام",
+      "en": "Task Management App"
+    },
+    "description": {
+      "ar": "تطبيق ويب لإدارة المهام والمشاريع مع واجهة سهلة الاستخدام",
+      "en": "Web application for task and project management with user-friendly interface"
+    },
+    "githubUrl": "https://github.com/example/task-manager",
+    "liveUrl": "https://task-manager-demo.netlify.app",
+    "imageUrl": "https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "technologies": "Vue.js, Node.js, MongoDB",
+    "createdAt": 1703980800000,
+    "updatedAt": 1703980800000
+  },
+  {
+    "id": "project-3",
+    "title": {
+      "ar": "تطبيق الطقس",
+      "en": "Weather App"
+    },
+    "description": {
+      "ar": "تطبيق موبايل لعرض حالة الطقس مع توقعات دقيقة لعدة أيام",
+      "en": "Mobile application for weather information with accurate forecasts for multiple days"
+    },
+    "githubUrl": "https://github.com/example/weather-app",
+    "liveUrl": "https://weather-app-demo.netlify.app",
+    "imageUrl": "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "technologies": "React Native, API Integration",
+    "createdAt": 1703894400000,
+    "updatedAt": 1703894400000
+  },
+  {
+    "id": "project-4",
+    "title": {
+      "ar": "متجر إلكتروني",
+      "en": "E-commerce Store"
+    },
+    "description": {
+      "ar": "متجر إلكتروني متكامل مع نظام دفع آمن وإدارة المخزون",
+      "en": "Complete e-commerce store with secure payment system and inventory management"
+    },
+    "githubUrl": "https://github.com/example/ecommerce-store",
+    "liveUrl": "https://ecommerce-demo.netlify.app",
+    "imageUrl": "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "technologies": "Next.js, Stripe, PostgreSQL",
+    "createdAt": 1703808000000,
+    "updatedAt": 1703808000000
+  }
+]

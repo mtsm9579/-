@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البروفايل الشخصي - Personal Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1 class="brand-title" id="portfolioTitle">البروفايل الشخصي</h1>
+            </div>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                <button class="lang-toggle" id="langToggle">
+                    <span class="lang-text">EN</span>
+                </button>
+                <div class="social-links" id="socialLinks">
+                    <!-- Social links will be populated dynamically -->
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="profile-section">
+                    <div class="profile-image-container" id="profileImageContainer">
+                        <!-- Profile image will be populated dynamically -->
+                    </div>
+                    <div class="profile-info">
+                        <h2 class="profile-name" id="profileName">اسم المطور</h2>
+                        <p class="profile-title" id="profileTitle">مطور ويب</p>
+                        <p class="profile-bio" id="profileBio">مرحباً بك في بروفايلي الشخصي</p>
+                    </div>
+                </div>
+                <h2 class="hero-title" id="heroTitle">معرض المشاريع</h2>
+                <p class="hero-description" id="heroDescription">مجموعة مختارة من أعمالي في تطوير الويب والبرمجة</p>
+            </div>
+        </section>
+
+        <section class="view-controls-section">
+            <div class="view-controls">
+                <button class="view-btn active" data-view="grid" aria-label="Grid view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                </button>
+                <button class="view-btn" data-view="list" aria-label="List view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/>
+                        <line x1="8" y1="12" x2="21" y2="12"/>
+                        <line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <section class="projects" id="projectsContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p data-ar="جاري تحميل المشاريع..." data-en="Loading projects...">جاري تحميل المشاريع...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text" id="footerText">© 2024 جميع الحقوق محفوظة</p>
+            <a href="admin.html" class="admin-link" data-ar="لوحة التحكم" data-en="Admin Panel">لوحة التحكم</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize the showcase
+        document.addEventListener('DOMContentLoaded', () => {
+            const showcase = new ProjectShowcase();
+            showcase.init();
+        });
+    </script>
+</body>
+</html>
